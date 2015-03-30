@@ -13,6 +13,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+
 public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
 {
     private static final String TAG = "GameStarter"; // for Log.w(TAG, ...)
@@ -22,8 +24,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
 
     private boolean isGameOver = true;
 
-    private int x; // blue circle x
-    private int y; // blue object y
+    private int x; // blue box x
+    private int y; // blue box y
     private int screenWidth;
     private int screenHeight;
 
@@ -32,11 +34,14 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     private Paint carPaint;
     private Paint streetPaint;
     private Paint centerLinePaint;
-    //private Paint
+    // private Paint
 
-    private int velocity;
+    private int yourVelocity;
+    private int carVelocity;
 
-    //THinking this is where I make my road start
+    public ArrayList<Car> cars;
+
+    // Thinking this is where I make my road start
     public MainGameView(Context context, AttributeSet atts)
     {
         super(context, atts);
@@ -44,7 +49,6 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
 
         getHolder().addCallback(this);
 
-        //
         // I choose each color here
         mainCharacterPaint = new Paint();
         mainCharacterPaint.setColor(Color.RED);
@@ -55,6 +59,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         streetPaint = new Paint(Color.GRAY);
         centerLinePaint = new Paint();
         centerLinePaint.setColor(Color.YELLOW);
+
+        cars = new ArrayList<Car>();
+        cars.add(new Car());
     }
 
     // called when the size changes (and first time, when view is created)
@@ -85,7 +92,12 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
 
     private void gameStep()
     {
-        y-=velocity;
+        y-=yourVelocity;
+        moveCar();
+    }
+
+    private void moveCar() {
+
     }
 
     public void updateView(Canvas canvas)
@@ -93,7 +105,11 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         if (canvas != null) {
            // canvas.drawRect(0, 0, canvas.getWidth(), canvas.getHeight(), backgroundPaint);
             drawBackground(canvas);
+
+            // Draw the main character!
+            // Well, I need to work on this next!
             canvas.drawCircle(x, y, 20, mainCharacterPaint);
+            //canvas.drawRect(x, y, 20, mainCharacterPaint);
         }
     }
 
@@ -162,7 +178,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         {
             //this.x = (int) e.getX();
             //this.y = (int) e.getY();
-            this.velocity += 4;
+            this.yourVelocity += 4;
         }
 
         return true;
