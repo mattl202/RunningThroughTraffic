@@ -44,6 +44,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
 
         getHolder().addCallback(this);
 
+        //
+        // I choose each color here
         mainCharacterPaint = new Paint();
         mainCharacterPaint.setColor(Color.RED);
         backgroundPaint = new Paint();
