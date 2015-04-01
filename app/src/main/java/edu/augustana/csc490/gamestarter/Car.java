@@ -1,11 +1,36 @@
 package edu.augustana.csc490.gamestarter;
 
+import android.graphics.Canvas;
+import android.graphics.Rect;
+
 /**
  * Created by Matthew Leja on 3/30/2015.
  */
 class Car {
     int velocity;
+    int x;
+    int y;
+    int height;
+    int width;
+
     public Car() {
-        velocity = 15;
+        velocity = 5;
+        height = 40;
+        width = 200;
+        x = 0;
+
+    }
+
+    public void move() {
+        x += velocity;
+
+    }
+
+    public Rect getRightRect(Canvas canvas) {
+        int left = x - width;
+        int top = canvas.getHeight() * 2 / 3;
+        int right = x;
+        int bottom = canvas.getHeight() / 2 + 40 + height;
+        return new Rect(left, top, right, bottom);
     }
 }

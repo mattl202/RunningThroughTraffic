@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -39,6 +40,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     private int yourVelocity;
     private int carVelocity;
 
+    Car car = new Car();
+
+    public int americanRightTop;
+
     public ArrayList<Car> cars;
 
     // Thinking this is where I make my road start
@@ -56,12 +61,15 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         backgroundPaint.setColor(Color.GREEN);
         carPaint = new Paint();
         carPaint.setColor(Color.BLACK);
-        streetPaint = new Paint(Color.GRAY);
+        streetPaint = new Paint();
+        streetPaint.setColor(Color.GRAY);
         centerLinePaint = new Paint();
         centerLinePaint.setColor(Color.YELLOW);
 
+
         cars = new ArrayList<Car>();
         cars.add(new Car());
+
     }
 
     // called when the size changes (and first time, when view is created)
@@ -93,13 +101,20 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     private void gameStep()
     {
         y-=yourVelocity;
-        moveCar();
+        car.move();
+
+        // Shoot, not sure what to do...
+        //TODO THIS!
+        if(y < car.x){
+
+        }
     }
 
     private void moveCar() {
 
     }
 
+    // This is when the character runs
     public void updateView(Canvas canvas)
     {
         if (canvas != null) {
@@ -109,7 +124,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
             // Draw the main character!
             // Well, I need to work on this next!
             canvas.drawCircle(x, y, 20, mainCharacterPaint);
-            //canvas.drawRect(x, y, 20, mainCharacterPaint);
+            //Rect rect = new Rect(10,10,10,10);
+            canvas.drawRect(car.getRightRect(canvas), carPaint);
+
+            //canvas.drawRect(20,canvas.getHeight()/2,60,canvas.getHeight()/2+40,carPaint);
         }
     }
 
