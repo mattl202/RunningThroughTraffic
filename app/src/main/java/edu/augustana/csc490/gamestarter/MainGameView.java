@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -41,6 +42,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     private int carVelocity;
 
     Car car = new Car();
+    Car car1 = new Car(25);
 
     public int americanRightTop;
 
@@ -68,7 +70,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
 
 
         cars = new ArrayList<Car>();
-        cars.add(new Car());
+        cars.add(car);
+        cars.add(car1);
 
     }
 
@@ -100,8 +103,16 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
 
     private void gameStep()
     {
-        y-=yourVelocity;
-        car.move();
+
+        y = y - yourVelocity;
+
+        for (Car c : cars) {
+            c.move();
+        }
+        //car.move();
+
+
+
 
         // Shoot, not sure what to do...
         //TODO THIS!
@@ -125,7 +136,12 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
             // Well, I need to work on this next!
             canvas.drawCircle(x, y, 20, mainCharacterPaint);
             //Rect rect = new Rect(10,10,10,10);
-            canvas.drawRect(car.getRightRect(canvas), carPaint);
+
+            for (Car c : cars) {
+                //c.move();
+                canvas.drawRect(c.getRightRect(canvas), carPaint);
+            }
+
 
             //canvas.drawRect(20,canvas.getHeight()/2,60,canvas.getHeight()/2+40,carPaint);
         }
@@ -221,9 +237,12 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
             threadIsRunning = running;
         }
 
+
+
         @Override
         public void run()
         {
+
             Canvas canvas = null;
 
             while (threadIsRunning)
@@ -232,6 +251,17 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
                 {
                     // get Canvas for exclusive drawing from this thread
                     canvas = surfaceHolder.lockCanvas(null);
+
+                    /* new CountDownTimer(30000, 1000) {
+
+                        public void onTick(long millisUntilFinished) {
+                            //mTextField.setText("seconds remaining: " + millisUntilFinished / 1000);
+                        }
+
+                        public void onFinish() {
+                            //mTextField.setText("done!");
+                        }
+                    }.start(); */
 
                     // lock the surfaceHolder for drawing
                     synchronized(surfaceHolder)

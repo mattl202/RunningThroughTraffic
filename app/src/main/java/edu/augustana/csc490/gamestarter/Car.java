@@ -16,9 +16,17 @@ class Car {
     public Car() {
         velocity = 5;
         height = 40;
-        width = 200;
+        width = 150;
         x = 0;
 
+    }
+
+    public Car(int velocity) {
+        this.velocity = velocity;
+        new Car();
+        height = 40;
+        width = 150;
+        x = 0;
     }
 
     public void move() {
