@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -47,6 +49,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     public int americanRightTop;
 
     public ArrayList<Car> cars;
+
+    public int level = 1;
 
     // Thinking this is where I make my road start
     public MainGameView(Context context, AttributeSet atts)
@@ -84,11 +88,20 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         screenWidth = w;
         screenHeight = h;
 
-        startNewGame();
+        try {
+            startNewGame(level);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void startNewGame()
-    {
+    public void startNewGame(int level) throws InterruptedException {
+        cars.clear();
+        for(int i = 0; i < level; i++) {
+            cars.add(new Car(level * carVelocity));
+            Thread.sleep(100);
+        }
+        cars.add(new Car(40));
         this.x = screenWidth/2;
         this.y = (int) (screenHeight*0.85);
 
@@ -101,13 +114,13 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     }
 
 
-    private void gameStep()
-    {
+    private void gameStep() throws InterruptedException {
 
         y = y - yourVelocity;
 
         for (Car c : cars) {
             c.move();
+            c.x = c.x%screenWidth;
         }
         //car.move();
 
@@ -116,9 +129,14 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
 
         // Shoot, not sure what to do...
         //TODO THIS!
-        if(y < car.x){
-
+        if(y < screenHeight*.15){
+            Thread.sleep(1000);
+            level++;
+            yourVelocity = 0;
+            startNewGame(level);
         }
+
+
     }
 
     private void moveCar() {
@@ -152,6 +170,13 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         //drawRect goes (left top right bottom)
         canvas.drawRect(0,(int)(.30*canvas.getHeight()),canvas.getWidth(),(int)(.70*canvas.getHeight()),streetPaint);
         drawCenterLine(canvas);
+        Paint c = new Paint();
+        c.setColor(Color.WHITE);
+        canvas.drawText("" + level,100,(int)(canvas.getHeight()*.85),c);
+        //canvas.scale();
+        //TextView v = (TextView)findViewById(R.id.textView2);
+        //v.setText("" + level);
+
     }
 
     private void drawCenterLine(Canvas canvas) {

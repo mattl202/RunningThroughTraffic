@@ -8,5 +8,6 @@
     <string name="action_settings">Settings</string>
     <string name="Start">Start</string>
     <string name="Title">Running Through Traffic</string>
+    <string name="level">1</string>
 
 </resources>
