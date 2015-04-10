@@ -9,5 +9,6 @@
     <string name="Start">Start</string>
     <string name="Title">Running Through Traffic</string>
     <string name="level">1</string>
+    <string name="instructions">Tap the screen to make the character walk, keep tapping and the character will move faster. Try not to get hit by any cars! Good luck!</string>
 
 </resources>

@@ -40,6 +40,10 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     private Paint carPaint;
     private Paint streetPaint;
     private Paint centerLinePaint;
+
+    //TextView textView = (TextView) findViewById(R.id.textView2);
+
+
     // private Paint
 
     private int yourVelocity;
@@ -103,23 +107,34 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
 
         cars.clear();
 
-
+        //textView.setText("Enter whatever you Like!");
 
 
         for(int i = 0; i < level; i++) {
-            Car c = new Car(carVelocity);
+            Car c = new Car(carVelocity, "right");
             if (level < 4){
                 //Car c = new Car(carVelocity);
-                c.x = c.x - 2 * (i*screenWidth/level);
+                int randNumGen = (int)Math.ceil(Math.random() * 1000);
+                c.x = c.x - 2 * (i*screenWidth/level) + randNumGen;
                 cars.add(c);
             } else if (level == 4) {
                 c.x = c.x - (i*screenWidth/level);
                 cars.add(c);
+                Car c3 = new Car(60);
+                c3.y = -200;
+                cars.add(c3);
+
+                //Car c2 = new Car(carVelocity,"left");
+                //c2.x = screenWidth;
+                //c2.velocity = -25;
+                //cars.add(c2);
             } else {
-                c.x = c.x - 2 * (i*screenWidth/level);
+                int randNumGen = (int)Math.ceil(Math.random() * 1000 - 500);
+                c.x = c.x - 2 * (i*screenWidth/level) + randNumGen;
                 cars.add(c);
 
-                Car c2 = new Car(carVelocity, "left");
+                Car c2 = new Car(10*level, "right");
+                c2.y = -200;
                 //c2.x = screenWidth;
                 //c2.velocity = -c2.velocity;
                 cars.add(c2);
@@ -141,13 +156,29 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
 
     private void gameStep() throws InterruptedException {
 
+        boolean fail = false;
         y = y - yourVelocity;
+
 
         for (Car c : cars) {
             c.move(screenWidth);
+            if (y < c.bottom && y > c.top) {
+                if (x > c.left && x < c.right) {
+                    Thread.sleep(1000);
+                    yourVelocity = 0;
+                    fail = true;
+                    //startNewGame(level);
+                    //TextView textView = (TextView) findViewById(R.id.textView2);
+                    //textView.setText("Enter whatever you Like!");
+
+                }
+            }
 
         }
-        //car.move();
+
+        if (fail) {
+            startNewGame(level);
+        }
 
 
 
@@ -160,8 +191,6 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
             yourVelocity = 0;
             startNewGame(level);
         }
-
-
     }
 
     // This is when the character runs
@@ -295,18 +324,13 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
             {
                 try
                 {
+
+
+
                     // get Canvas for exclusive drawing from this thread
                     canvas = surfaceHolder.lockCanvas(null);
 
-                    final Timer timer = new Timer();
-                    timer.scheduleAtFixedRate(new TimerTask() {
-                        int i = Integer.parseInt("100");
-                        public void run() {
-                            System.out.println(i--);
-                            if (i< 0)
-                                timer.cancel();
-                        }
-                    }, 0, 1000);
+
 
                     /* new CountDownTimer(30000, 1000) {
 
