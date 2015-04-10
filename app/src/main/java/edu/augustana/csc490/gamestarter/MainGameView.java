@@ -18,6 +18,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
 {
@@ -41,7 +43,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     // private Paint
 
     private int yourVelocity;
-    private int carVelocity;
+    private int carVelocity = 25;
 
     Car car = new Car();
     Car car1 = new Car(25);
@@ -96,12 +98,35 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void startNewGame(int level) throws InterruptedException {
+
+
+
         cars.clear();
+
+
+
+
         for(int i = 0; i < level; i++) {
-            cars.add(new Car(level * carVelocity));
-            Thread.sleep(100);
+            Car c = new Car(carVelocity);
+            if (level < 4){
+                //Car c = new Car(carVelocity);
+                c.x = c.x - 2 * (i*screenWidth/level);
+                cars.add(c);
+            } else if (level == 4) {
+                c.x = c.x - (i*screenWidth/level);
+                cars.add(c);
+            } else {
+                c.x = c.x - 2 * (i*screenWidth/level);
+                cars.add(c);
+
+                Car c2 = new Car(carVelocity, "left");
+                //c2.x = screenWidth;
+                //c2.velocity = -c2.velocity;
+                cars.add(c2);
+            }
+
         }
-        cars.add(new Car(40));
+        //cars.add(new Car(40));
         this.x = screenWidth/2;
         this.y = (int) (screenHeight*0.85);
 
@@ -119,8 +144,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         y = y - yourVelocity;
 
         for (Car c : cars) {
-            c.move();
-            c.x = c.x%screenWidth;
+            c.move(screenWidth);
+
         }
         //car.move();
 
@@ -129,17 +154,13 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
 
         // Shoot, not sure what to do...
         //TODO THIS!
-        if(y < screenHeight*.15){
-            Thread.sleep(1000);
+        if(y < screenHeight*.10){
+            Thread.sleep(400);
             level++;
             yourVelocity = 0;
             startNewGame(level);
         }
 
-
-    }
-
-    private void moveCar() {
 
     }
 
@@ -157,7 +178,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
 
             for (Car c : cars) {
                 //c.move();
-                canvas.drawRect(c.getRightRect(canvas), carPaint);
+                canvas.drawRect(c.getRect(canvas), carPaint);
             }
 
 
@@ -237,7 +258,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         {
             //this.x = (int) e.getX();
             //this.y = (int) e.getY();
-            this.yourVelocity += 4;
+            this.yourVelocity += 10;
         }
 
         return true;
@@ -277,6 +298,16 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
                     // get Canvas for exclusive drawing from this thread
                     canvas = surfaceHolder.lockCanvas(null);
 
+                    final Timer timer = new Timer();
+                    timer.scheduleAtFixedRate(new TimerTask() {
+                        int i = Integer.parseInt("100");
+                        public void run() {
+                            System.out.println(i--);
+                            if (i< 0)
+                                timer.cancel();
+                        }
+                    }, 0, 1000);
+
                     /* new CountDownTimer(30000, 1000) {
 
                         public void onTick(long millisUntilFinished) {
@@ -294,7 +325,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
                         gameStep();         // update game state
                         updateView(canvas); // draw using the canvas
                     }
-                    Thread.sleep(10); // if you want to slow down the action...
+                    Thread.sleep(20); // if you want to slow down the action...
                 } catch (InterruptedException ex) {
                     Log.e(TAG,ex.toString());
                 }
