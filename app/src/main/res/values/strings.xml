@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Some Game</string>
-    <string name="title_activity_intro">IntroActivity</string>
+    <string name="app_name">Play the game!</string>
+    <string name="title_activity_intro">Running Through Traffic v1.0</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>

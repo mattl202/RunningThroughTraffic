@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -40,6 +41,12 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     private Paint carPaint;
     private Paint streetPaint;
     private Paint centerLinePaint;
+
+    MediaPlayer mediaPlayer = MediaPlayer.create(getContext(), R.raw.coconutshy);
+
+    MediaPlayer hitSound = MediaPlayer.create(getContext(), R.raw.target_hit);
+
+    MediaPlayer winner = MediaPlayer.create(getContext(), R.raw.handclap);
 
     //TextView textView = (TextView) findViewById(R.id.textView2);
 
@@ -104,6 +111,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     public void startNewGame(int level) throws InterruptedException {
 
 
+        mediaPlayer.start();
 
         cars.clear();
 
@@ -164,6 +172,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
             c.move(screenWidth);
             if (y < c.bottom && y > c.top) {
                 if (x > c.left && x < c.right) {
+                    hitSound.start();
                     Thread.sleep(1000);
                     yourVelocity = 0;
                     fail = true;
@@ -186,6 +195,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         // Shoot, not sure what to do...
         //TODO THIS!
         if(y < screenHeight*.10){
+            winner.start();
             Thread.sleep(400);
             level++;
             yourVelocity = 0;
@@ -246,6 +256,9 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     public void releaseResources()
     {
         // release any resources (e.g. SoundPool stuff)
+        mediaPlayer.release();
+        hitSound.release();
+        winner.release();
     }
 
     @Override

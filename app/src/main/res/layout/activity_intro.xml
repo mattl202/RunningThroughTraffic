@@ -36,7 +36,8 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="@string/instructions"
             android:id="@+id/textView3"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:padding="20dp" />
     </LinearLayout>
 
 </RelativeLayout>
